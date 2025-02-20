@@ -1,18 +1,20 @@
-# Use an official Maven image as the build stage
+# Use official Maven image for building
 FROM maven:3.8.8-eclipse-temurin-17 AS build
 
 # Set working directory
 WORKDIR /app
 
-# Copy the project files
-COPY app/* .
+# Copy only the POM first, to cache dependencies efficiently
 COPY app/pom.xml .
-COPY app/src ./src
-# Download dependencies (to cache them in Docker layers)
+
+# Download dependencies separately (this will be cached)
 RUN mvn dependency:go-offline
 
-# Build the application
-RUN mvn clean package
+# Copy the rest of the project files
+COPY app/. .
+
+# Build the application, skipping tests (they can be run separately)
+RUN mvn clean package -DskipTests
 
 # Use a smaller JDK runtime for running the app
 FROM openjdk:17-jdk-slim
