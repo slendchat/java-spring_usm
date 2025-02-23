@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sleep 10
+#sleep 10
 
 API_URL="http://localhost:8080"
 EXIT_CODE=0

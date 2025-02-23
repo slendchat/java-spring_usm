@@ -14,5 +14,5 @@ echo "📜 To check logs, use: docker logs -f <container_name>"
 echo "🐳 To check running containers, use: docker ps"
 
 echo "📜 Fetching logs from library_app..."
-sleep 5
+sleep 10
 ./testapi.sh
