@@ -20,10 +20,4 @@ public class LibraryController {
         return ResponseEntity.ok(libraryService.getLibraryWithBooks());
     }
 
-    // 📌 Добавляем книгу в библиотеку
-    // @PostMapping("/book")
-    // public ResponseEntity<Void> addBookToLibrary(@RequestBody String bookTitle) {
-    //     libraryService.addBookToLibrary(bookTitle);
-    //     return ResponseEntity.ok().build();
-    // }
 }

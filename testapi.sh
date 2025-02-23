@@ -1,11 +1,13 @@
 #!/bin/bash
 
+sleep 10
+
 API_URL="http://localhost:8080"
 EXIT_CODE=0
 
 echo "🚀 Запуск тестов API..."
 
-# 📌 Функция для тестирования API-запросов
+# 📌 Функция для тестирования API-запросов с выводом респонса
 test_api() {
     local method=$1
     local endpoint=$2
@@ -17,6 +19,9 @@ test_api() {
             -H "Content-Type: application/json" -d "$data")
     elif [ "$method" == "GET" ]; then
         response=$(curl -s -w "%{http_code}" -X GET "$API_URL$endpoint")
+    elif [ "$method" == "PUT" ]; then
+        response=$(curl -s -w "%{http_code}" -X PUT "$API_URL$endpoint" \
+            -H "Content-Type: application/json" -d "$data")
     elif [ "$method" == "DELETE" ]; then
         response=$(curl -s -w "%{http_code}" -X DELETE "$API_URL$endpoint")
     fi
@@ -27,59 +32,60 @@ test_api() {
     if [ "$http_code" -ne "$expected_code" ]; then
         echo "❌ Ошибка: $method $endpoint (Ожидался код: $expected_code, получили: $http_code)"
         echo "Ответ сервера:"
-        echo "$body" | jq .  # 📌 Красиво выводим JSON-ответ
+        echo "$body" | jq .  # 📌 Красиво форматируем JSON-ответ
         EXIT_CODE=1
     else
         echo "✅ Успешно: $method $endpoint (Код: $http_code)"
         echo "Ответ сервера:"
-        echo "$body" | jq .  # 📌 Выводим JSON-ответ
+        echo "$body" | jq .
     fi
 }
 
 # 📌 Тесты
 
-# 1. Получить список книг в библиотеке (должен быть 200 OK)
-test_api "GET" "/library" "" 200
+# подготовка
+test_api "POST" "/books" '{
+    "title": "testbook1",
+    "authorName": "Aristotle",
+    "publisherName": "Verso",
+    "categories": ["Philosophy"]
+}' 200
+test_api "POST" "/books" '{
+    "title": "testbook2",
+    "authorName": "Lovecraft",
+    "publisherName": "BVZ",
+    "categories": ["Horror", "Sci-Fi"]
+}' 200
 
-# 2. Добавить новую книгу
+# 🟢 **1. Тестируем авторов**
+test_api "GET" "/authors" "" 200
+test_api "POST" "/authors" '{"name": "John Doe"}' 200
+test_api "GET" "/authors/1/books" "" 200
+
+# 🟢 **2. Тестируем книги**
+test_api "GET" "/books" "" 200
 test_api "POST" "/books" '{
     "title": "Spring Boot in Action",
     "authorName": "John Doe",
     "publisherName": "Tech Books",
     "categories": ["Java", "Programming"]
 }' 200
-
-test_api "POST" "/books" '{
-    "title": "Test book 2",
-    "authorName": "Hovard Lovecraft",
-    "publisherName": "pocketclassic",
-    "categories": ["Sci-Fi", "Horror"]
-}' 200
-
-# 3. Получить список всех книг
-test_api "GET" "/books" "" 200
-
-# 4. Получить книгу по ID (ID = 1)
 test_api "GET" "/books/1" "" 200
+test_api "PUT" "/books/3" '{"title": "Updated Book"}' 200
+test_api "DELETE" "/books/3" "" 200
 
-# 5. Удалить книгу (ID = 1)
-test_api "DELETE" "/books/1" "" 200
+# 🟢 **3. Тестируем категории**
+test_api "GET" "/categories" "" 200
+test_api "POST" "/categories" '{"name": "Java"}' 200
+test_api "GET" "/categories/1/books" "" 200
 
-# 6. Получить всех авторов
-test_api "GET" "/authors" "" 200
-
-# 7. Добавить нового автора
-test_api "POST" "/authors" '{
-    "name": "Robert Martin"
-}' 200
-
-# 8. Получить всех издателей
+# 🟢 **4. Тестируем издателей**
 test_api "GET" "/publishers" "" 200
+test_api "POST" "/publishers" '{"name": "Penguin Random House"}' 200
+test_api "GET" "/publishers/1/books" "" 200
 
-# 9. Добавить нового издателя
-test_api "POST" "/publishers" '{
-    "name": "Penguin Random House"
-}' 200
+# 🟢 **5. Тестируем библиотеку**
+test_api "GET" "/library" "" 200
 
 # 📌 Завершаем тестирование
 if [ "$EXIT_CODE" -ne 0 ]; then
