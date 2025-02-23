@@ -34,4 +34,4 @@ RUN chmod +x /app/testapi.sh
 
 
 # Run the application
-CMD java -jar app.jar & sleep 10 && /app/testapi.sh
+ENTRYPOINT ["java", "-jar", "app.jar"]

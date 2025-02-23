@@ -20,7 +20,7 @@ services:
   app:
     build: .
     container_name: library_app
-    restart: always
+    restart: no
     depends_on:
       database:
         condition: service_healthy
