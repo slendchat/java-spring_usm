@@ -72,7 +72,7 @@ test_api "POST" "/books" '{
 }' 200
 test_api "GET" "/books/1" "" 200
 test_api "PUT" "/books/3" '{"title": "Updated Book"}' 200
-# test_api "DELETE" "/books/3" "" 200
+test_api "DELETE" "/books/3" "" 200
 
 # 🟢 **3. Тестируем категории**
 test_api "GET" "/categories" "" 200
@@ -88,9 +88,6 @@ test_api "GET" "/publishers/1/books" "" 200
 test_api "GET" "/library" "" 200
 
 
-test_api "DELETE" "/books/1" "" 200
-test_api "DELETE" "/books/2" "" 200
-test_api "DELETE" "/books/3" "" 200
 # 📌 Завершаем тестирование
 if [ "$EXIT_CODE" -ne 0 ]; then
     echo "❌ Ошибка: Один или несколько тестов не прошли!"
