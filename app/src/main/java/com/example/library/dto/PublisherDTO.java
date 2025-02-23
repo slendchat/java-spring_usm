@@ -19,18 +19,13 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-public class BookDTO {
-    private Long id;
-    private String title;
-    private String authorName;
-    private String publisherName;
-    private Set<String> categories;
+public class PublisherDTO {
 
-    public BookDTO(Long id, String title, String authorName, String publisherName, Set<String> categories) {
+    private Long id;
+    private String name;
+
+    public PublisherDTO(Long id, String name) {
         this.id = id;
-        this.title = title;
-        this.authorName = authorName;
-        this.publisherName = publisherName;
-        this.categories = categories;
+        this.name = name;
     }
 }

@@ -4,4 +4,16 @@ package com.example.library.repository; // com.example.library - package name, r
 import com.example.library.entity.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface BookRepository extends JpaRepository<Book, Long> {}
+
+// спринг автоматически создает следующие методы:
+// save(T entity)	Сохраняет или обновляет объект в базе
+// findById(ID id)	Ищет объект по id
+// findAll()	Возвращает все записи
+// deleteById(ID id)	Удаляет объект по id
+// existsById(ID id)	Проверяет, существует ли объект по id
+// count()	Возвращает количество записей в таблице
+
+
+public interface BookRepository extends JpaRepository<Book, Long> {
+
+}

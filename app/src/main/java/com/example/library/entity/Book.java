@@ -9,7 +9,6 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,4 +29,14 @@ public class Book {
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> categories;
+
+    public Book() {} // ✅ Добавляем пустой конструктор
+
+    // ✅ Добавляем новый конструктор
+    public Book(String title, Author author, Publisher publisher, Set<Category> categories) {
+        this.title = title;
+        this.author = author;
+        this.publisher = publisher;
+        this.categories = categories;
+    }
 }
