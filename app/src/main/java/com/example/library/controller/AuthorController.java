@@ -29,6 +29,7 @@ public class AuthorController {
         return ResponseEntity.ok(authorService.createAuthor(authorDTO));
     }
 
+    //get books by author
     @GetMapping("/{id}/books")
     public ResponseEntity<List<BookDTO>> getBooksByAuthor(@PathVariable Long id) {
         return ResponseEntity.ok(authorService.getBooksByAuthor(id));

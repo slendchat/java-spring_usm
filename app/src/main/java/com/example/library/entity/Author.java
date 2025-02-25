@@ -2,7 +2,6 @@ package com.example.library.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.util.List;
 
@@ -18,9 +17,9 @@ public class Author {
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL) // Связь "один ко многим"
     private List<Book> books; // Один автор может написать много книг
     
-    public Author() {} // ✅ Пустой конструктор (нужен JPA)
+    public Author() {} //  Пустой конструктор (нужен JPA)
 
-    public Author(String name) { // ✅ Добавленный конструктор
+    public Author(String name) { //  Добавленный конструктор
         this.name = name;
     }
 }
