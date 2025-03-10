@@ -1,0 +1,36 @@
+services:
+  database:
+    image: postgres:15
+    container_name: library_db
+    restart: always
+    environment:
+      POSTGRES_DB: library_db
+      POSTGRES_USER: librarydbuser
+      POSTGRES_PASSWORD: 1234
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U librarydbuser -d library_db || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    container_name: library_app
+    restart: no
+    depends_on:
+      database:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/library_db
+      SPRING_DATASOURCE_USERNAME: librarydbuser
+      SPRING_DATASOURCE_PASSWORD: 1234
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres_data:
+
