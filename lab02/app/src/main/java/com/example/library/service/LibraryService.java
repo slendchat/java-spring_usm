@@ -9,8 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Service
+
 @Transactional
+@Service
 public class LibraryService {
 
     private final LibraryDao libraryDao;
@@ -21,12 +22,18 @@ public class LibraryService {
 
     @PostConstruct
     public void initLibrary() {
+        initializeLibraryIfNeeded();
+    }
+
+    @Transactional
+    public void initializeLibraryIfNeeded() {
         if (libraryDao.findById(1L).isEmpty()) {
             Library library = new Library("Main Library", List.of());
             libraryDao.save(library);
         }
     }
 
+    @Transactional
     public LibraryDTO getLibraryWithBooks() {
         Library library = libraryDao.findById(1L)
                 .orElseThrow(() -> new RuntimeException("Библиотека не найдена"));
