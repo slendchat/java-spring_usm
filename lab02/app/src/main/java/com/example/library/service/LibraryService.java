@@ -3,15 +3,15 @@ package com.example.library.service;
 import com.example.library.dto.LibraryDTO;
 import com.example.library.entity.Library;
 import com.example.library.repository.LibraryDao;
-import jakarta.annotation.PostConstruct;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-
-@Transactional
 @Service
+@Transactional
 public class LibraryService {
 
     private final LibraryDao libraryDao;
@@ -20,20 +20,15 @@ public class LibraryService {
         this.libraryDao = libraryDao;
     }
 
-    @PostConstruct
+    // Сработает только после полной инициализации контекста (включая транзакции)
+    @org.springframework.context.event.EventListener(org.springframework.context.event.ContextRefreshedEvent.class)
     public void initLibrary() {
-        initializeLibraryIfNeeded();
-    }
-
-    @Transactional
-    public void initializeLibraryIfNeeded() {
         if (libraryDao.findById(1L).isEmpty()) {
             Library library = new Library("Main Library", List.of());
             libraryDao.save(library);
         }
     }
 
-    @Transactional
     public LibraryDTO getLibraryWithBooks() {
         Library library = libraryDao.findById(1L)
                 .orElseThrow(() -> new RuntimeException("Библиотека не найдена"));
