@@ -10,10 +10,8 @@ public class Book {
     @Id
     private Long bookId;
     private String bookName;
-
-    // foreign-keys:
     private Long authorId;
     private Long publisherId;
     private Long categoryId;
-    private Long libraryId;
+    // поле libraryId не нужно — JDBC сам подставит FK из @MappedCollection
 }
