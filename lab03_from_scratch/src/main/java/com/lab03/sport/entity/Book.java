@@ -13,5 +13,5 @@ public class Book {
     private Long authorId;
     private Long publisherId;
     private Long categoryId;
-    // поле libraryId не нужно — JDBC сам подставит FK из @MappedCollection
+    private Long libraryId;
 }
